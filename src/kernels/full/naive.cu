@@ -4,10 +4,10 @@ __global__ void naive_matmul(const FP_T *__restrict__ A,
                              const int n) {
   // NOTE: one possible solution (if we want to access as A[i,j]) is to swap the
   // .x and .y. This is because from the hardware's perspective, x is the
-  // "fastest moving" axis and j is the "fastest moving" axis of the array in
-  // memory, leading to "coalesced accesses". Otherwise, we can swap the roles
-  // of i and j in the index expressions below
-  int i = blockIdx.y * blockDim.y + threadIdx.y; 
+  // "fastest moving" GPU axis and j is the "fastest moving" axis of the array
+  // in memory, leading to "coalesced accesses". Otherwise, we can swap the
+  // roles of i and j in the index expressions below
+  int i = blockIdx.y * blockDim.y + threadIdx.y;
   int j = blockIdx.x * blockDim.x + threadIdx.x;
 
   FP_T acc = (FP_T) 0.0;

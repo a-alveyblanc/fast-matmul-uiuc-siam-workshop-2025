@@ -43,9 +43,9 @@ __global__ void shared_memory_matmul(const FP_T *__restrict__ A,
   FP_T acc = (FP_T) 0.0;
   for (int ko = 0; ko < n; ko += BK) { // outer loop over k-blocks
     As[ii*lda + jj] = A[(i + ii)*n + (ko + jj)]; // i + ii selects the row
-                                                // ko + jj selects the column
+                                                 // ko + jj selects the column
     Bs[ii*ldb + jj] = B[(i + ko)*n + (j + jj)];  // i + ko selects the row
-                                                // j + jj selects the column
+                                                 // j + jj selects the column
     __syncthreads(); // ensure all necessary data is loaded 
 
     for (int ki = 0; ki < BK; ++ki) { // reduction loop within k-blocks 
