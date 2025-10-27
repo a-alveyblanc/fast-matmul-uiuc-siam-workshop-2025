@@ -1,4 +1,3 @@
-import numpy as np
 import cupy as cu
 
 import sys
@@ -62,6 +61,7 @@ void {wrapper_name}(const float *__restrict__ A,
 
     C_true = A @ B
     print(f"Error = {cu.linalg.norm(C_true - C) / cu.linalg.norm(C):.4f}")
+
 
 if __name__ == "__main__":
     main()
