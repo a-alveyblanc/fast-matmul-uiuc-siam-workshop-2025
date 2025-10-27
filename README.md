@@ -1,4 +1,4 @@
-# Optimization techniques for GPUs (WIP)
+# Optimization techniques for GPUs
 SIAM @ UIUC workshop on optimization techniques for GPUs. Learn about GPU
 architecture by implementing matrix multiplication from naive to register tiled.
 Lots of details to cover in each example, but goal is to assist in gaining
