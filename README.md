@@ -15,3 +15,7 @@ is to fill ~1-1.5 hours.
     - Note on bank conflicts
 - Register tiled implementation
     - Notes on register pressure, occupancy, etc.
+
+Bounds checking in kernels is explicitly omitted to reduce visual noise. The
+assumption is that sizes are carefully picked so that nothing goes out of
+bounds.
