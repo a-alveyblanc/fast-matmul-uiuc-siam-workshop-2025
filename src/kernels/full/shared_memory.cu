@@ -11,9 +11,10 @@ __global__ void shared_memory_matmul(const FP_T *__restrict__ A,
   int ii = threadIdx.y;
   int jj = threadIdx.x;
 
-  // NOTE: prone to bank conflicts, pad one of the arrays to eliminate them 
+  // NOTE: prone to bank conflicts, pad one of the arrays to eliminate them
   __shared__ FP_T smem[BM*BK + BK*BN];
-  // __shared__ FP_T smem[BM*(BK + 1) + BK*BN];
+  // __shared__ FP_T smem[BM*(BK + 1) + BK*BN]; // uncomment to observe
+                                                // performance differences
 
   // NOTE: for a row-major array, bank conflicts can be expected to arise when
   // we are iterating down a particular column with threads. this is because
@@ -21,7 +22,7 @@ __global__ void shared_memory_matmul(const FP_T *__restrict__ A,
   // in the same bank (given the correct sizes of BM, BK with BK mattering more
   // here and BM "accidentally" helping us). why is this the case?
 
-  // NOTE: for those curious, the bank id of some array entry can be computed 
+  // NOTE: for those curious, the bank id of some array entry can be computed
   // by (addr / 4) % 32. for those who understand bit manipulation this
   // is the same as taking the lower 5 bits of the address: (addr >> 2) & 0x1F
 
@@ -44,11 +45,11 @@ __global__ void shared_memory_matmul(const FP_T *__restrict__ A,
   for (int ko = 0; ko < n; ko += BK) { // outer loop over k-blocks
     As[ii*lda + jj] = A[(i + ii)*n + (ko + jj)]; // i + ii selects the row
                                                  // ko + jj selects the column
-    Bs[ii*ldb + jj] = B[(i + ko)*n + (j + jj)];  // i + ko selects the row
+    Bs[ii*ldb + jj] = B[(ko + ii)*n + (j + jj)];  // i + ko selects the row
                                                  // j + jj selects the column
-    __syncthreads(); // ensure all necessary data is loaded 
+    __syncthreads(); // ensure all necessary data is loaded
 
-    for (int ki = 0; ki < BK; ++ki) { // reduction loop within k-blocks 
+    for (int ki = 0; ki < BK; ++ki) { // reduction loop within k-blocks
       acc += As[ii*lda + ki] * Bs[ki*ldb + jj];
     }
     __syncthreads(); // ensure all data has been used
